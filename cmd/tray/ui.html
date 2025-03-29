@@ -1,0 +1,80 @@
+<input type="text" id="search" autocomplete="off"/>
+<div id="filtered"></div>
+
+<style>
+  #filtered p {
+    padding: 5px;
+    margin: 2px 0;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  #filtered p:hover, #filtered p.active {
+    background: lightblue;
+  }
+</style>
+
+<script>
+const [searchElement, filteredElement] = document.querySelectorAll("#search, #filtered");
+let activeIndex = -1;
+
+
+document.addEventListener("DOMContentLoaded", () => {
+
+	searchElement.focus();
+
+	searchElement.addEventListener("input", async (event) => {
+		const result = await window.filter(event.target.value);
+		filteredElement.innerHTML = ""; // Clear previous results
+		activeIndex = -1; // Reset selection
+
+		result.filtered_strings.forEach((str, index) => {
+			const p = document.createElement("p");
+			p.textContent = str;
+			p.dataset.index = index; // Store index for tracking
+			p.addEventListener("mouseenter", () => setActive(index));
+			p.addEventListener("click", async () => await selectItem(index));
+			filteredElement.appendChild(p);
+		});
+	});
+
+	//esc should close the window
+	document.addEventListener("keydown", (event) => {
+		if (event.key == "Escape"){
+			window.close_window()
+		}
+	})
+
+	document.addEventListener("keydown", async (event) => {
+		const items = filteredElement.querySelectorAll("p");
+		if (items.length === 0) return;
+
+		if (event.key === "ArrowDown") {
+			activeIndex = (activeIndex + 1) % items.length;
+			setActive(activeIndex);
+		} else if (event.key === "ArrowUp") {
+			activeIndex = (activeIndex - 1 + items.length) % items.length;
+			setActive(activeIndex);
+		} else if (event.key === "Enter" && activeIndex >= 0) {
+			await selectItem(activeIndex);
+			window.close_window()
+		}
+	});
+});
+
+// Function to highlight the active item
+function setActive(index) {
+	const items = filteredElement.querySelectorAll("p");
+	items.forEach((item, i) => {
+		item.classList.toggle("active", i === index);
+	});
+	activeIndex = index;
+}
+
+// Function to handle selection
+async function selectItem(index) {
+	const items = filteredElement.querySelectorAll("p");
+	if (index >= 0 && index < items.length) {
+		await window.select_context(items[index].textContent);
+	}
+}
+</script>
