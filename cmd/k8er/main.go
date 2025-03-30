@@ -46,8 +46,8 @@ func GetK8Contexts() []string {
 }
 
 func main() {
-	cwd, _ := os.Getwd()
-	htmlFile := path.Join(cwd, "html", "k8.html")
+	cwd, _ := os.Executable() //there is a makefile which builds this and puts in root/bin dir
+	htmlFile := path.Join(cwd, "../", "../", "html", "k8.html")
 	htmlByte, err := os.ReadFile(htmlFile)
 	if err != nil {
 		log.Fatalf("Error reading file %s: %s\n", htmlFile, err.Error())

@@ -3,7 +3,6 @@ module github.com/damaragidda-b/QuickTray
 go 1.23.2
 
 require (
-	github.com/gen2brain/beeep v0.0.0-20240516210008-9c006672e7f4 // indirect
 	github.com/getlantern/context v0.0.0-20190109183933-c447772a6520 // indirect
 	github.com/getlantern/errors v0.0.0-20190325191628-abdb3e3e36f7 // indirect
 	github.com/getlantern/golog v0.0.0-20190830074920-4ef2e798c2d7 // indirect

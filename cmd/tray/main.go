@@ -5,9 +5,8 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
 
-	"github.com/gen2brain/beeep"
 	"github.com/getlantern/systray"
 	"github.com/getlantern/systray/example/icon"
 )
@@ -19,33 +18,33 @@ func main() {
 func onReady() {
 	fmt.Println("Systray started...")
 	systray.SetIcon(icon.Data)
-	systray.SetTitle("QuickTray")
 
 	k8Menu := systray.AddMenuItem("K8 Selector", "Select Kubernetes Context")
+	json_string := systray.AddMenuItem("Json Encoder", "Convert json to string")
+	string_json := systray.AddMenuItem("Json Decoder", "Convert string to json")
 
 	go func() {
 		for {
-			<-k8Menu.ClickedCh
-			launchK8Selector()
+			select {
+			case <-k8Menu.ClickedCh: launchTool("k8er")
+			case <-json_string.ClickedCh: launchTool("json",  "-marshal")
+			case <-string_json.ClickedCh: launchTool("json")
+			}
 		}
 	}()
 }
 
-func launchK8Selector() {
-	cwd, _ := os.Getwd()
-	cmdPath := path.Join(cwd, "cmd", "k8er", "k8er")
-	cmd := exec.Command(cmdPath) 
+func launchTool(name string, opts ...string) {
+	cwd, _ := os.Executable()
+	binPath := filepath.Join(cwd, "../", name)
 
+	cmd := exec.Command(binPath, opts...)
 	out, err := cmd.CombinedOutput()
-	log.Println(exec.LookPath(cmdPath))
+	log.Println("Executing:", binPath, opts)
 
 	if err != nil {
-		msg := fmt.Sprintf("Failed to start K8 selector: %s", err.Error())
-		log.Println(msg)
-		beeep.Notify("K8 Selector Error", msg, "")
+		log.Printf("Failed to start %s: %s : %s\n", name, err, string(out))
 	} else {
-		msg := fmt.Sprintf("K8 Selector Output:\n%s", string(out))
-		log.Println(msg)
-		beeep.Notify("K8 Selector", msg, "")
+		log.Printf("%s Output:\n%s", name, string(out))
 	}
 }

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #f4f4f4;
+            margin: 0;
+        }
+        textarea {
+            width: 80%;
+            height: 150px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #output {
+            width: 80%;
+            height: 150px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            overflow: auto;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <textarea id="input" placeholder="Paste your JSON string/object here..."></textarea>
+    <button id="convert">Convert</button>
+    <textarea id="output" placeholder="Formatted JSON/string will appear here..." readonly></textarea>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const inputElement = document.getElementById("input");
+            const convertButton = document.getElementById("convert");
+            const outputElement = document.getElementById("output");
+
+            inputElement.focus();
+
+
+            convertButton.addEventListener("click", async () => {
+                try {
+                    const jsonString = inputElement.value.trim();
+                    const result = await window.json_string(jsonString);
+                    outputElement.value = result.output; // Expecting formatted JSON from WebView
+                } catch (error) {
+                    outputElement.value = "Error: Could not convert JSON.";
+                }
+            });
+
+            // ESC should close the window
+            document.addEventListener("keydown", (event) => {
+                if (event.key === "Escape") {
+                    window.close_window();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
