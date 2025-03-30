@@ -36,6 +36,7 @@ func onReady() {
 
 func launchTool(name string, opts ...string) {
 	cwd, _ := os.Executable()
+	cwd, _ = filepath.EvalSymlinks(cwd)
 	binPath := filepath.Join(cwd, "../", name)
 
 	cmd := exec.Command(binPath, opts...)

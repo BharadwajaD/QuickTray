@@ -39,7 +39,7 @@ func main(){
 	marshal := flag.Bool("marshal" , false, "default is unmarshaling usecase")
 	flag.Parse()
 
-	cwd, _ := os.Getwd()
+	cwd, _ := os.Executable() //there is a makefile which builds this and puts in root/bin dir
 	htmlFile := path.Join(cwd, "../", "../", "html", "json_string.html")
 	htmlByte, err := os.ReadFile(htmlFile)
 	if err != nil {
