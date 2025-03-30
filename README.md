@@ -9,3 +9,10 @@
 
 - create a seperate prog in ./cmd/ and build in the same dir
 - add a switch case in ./cmd/tray/main.go along with new menu option
+
+# Run
+
+- ```make``` will build requried targets into ./bin dir
+- make a symlink to ./bin/tray from $PATH/tray
+- after logging in just run ```tray &``` in one of your terminal
+- BOOM !! - all your util tools at one place
