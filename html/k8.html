@@ -75,6 +75,7 @@ async function selectItem(index) {
 	const items = filteredElement.querySelectorAll("p");
 	if (index >= 0 && index < items.length) {
 		await window.select_context(items[index].textContent);
+		await window.close_window()
 	}
 }
 </script>
